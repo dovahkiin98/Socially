@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:socially/app/theme/colors.dart';
 import 'package:socially/app/widget/markdown_text.dart';
 import 'package:socially/domain/model/post.dart';
@@ -179,7 +180,18 @@ class _PostBottomBar extends StatelessWidget {
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           onPressed: () {},
-          label: Text('1,320'),
+          label: StreamBuilder(
+            stream: post.likes.count().query.snapshots(),
+            builder: (context, snapshot) {
+              final count = snapshot.data;
+
+              if (count != null) {
+                return Text(NumberFormat().format(count.size));
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
           icon: Assets.svg.heartEmpty.svg(
             colorFilter: ColorFilter.mode(
               AppColors.onSurface.withOpacity(0.6),
@@ -201,7 +213,18 @@ class _PostBottomBar extends StatelessWidget {
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           onPressed: () {},
-          label: Text('23'),
+          label: StreamBuilder(
+            stream: post.comments.count().query.snapshots(),
+            builder: (context, snapshot) {
+              final count = snapshot.data;
+
+              if (count != null) {
+                return Text(NumberFormat().format(count.size));
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
           icon: Assets.svg.comment.svg(
             colorFilter: ColorFilter.mode(
               AppColors.onSurface.withOpacity(0.6),

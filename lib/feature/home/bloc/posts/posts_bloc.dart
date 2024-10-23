@@ -24,6 +24,8 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     PostsGetDataEvent event,
     Emitter<PostsState> emit,
   ) async {
+    emit(PostsLoadingState());
+
     try {
       final posts = await _repository.getPosts();
 

@@ -24,6 +24,8 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
     StoriesGetDataEvent event,
     Emitter<StoriesState> emit,
   ) async {
+    emit(StoriesLoadingState());
+
     try {
       final stories = await _repository.getStories();
 

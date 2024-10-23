@@ -2,31 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socially/app/router/routes.dart';
-import 'package:socially/feature/home/bloc/posts/posts_bloc.dart';
-import 'package:socially/feature/home/bloc/stories/stories_bloc.dart';
 import 'package:socially/gen/assets.gen.dart';
 
-import '../widget/home_bottom_navigation.dart';
-import 'home_page_content.dart';
+import '../../bloc/comments/comments_bloc.dart';
+import '../../bloc/post/post_bloc.dart';
+import 'post_page_content.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({
+class PostPage extends StatelessWidget {
+  const PostPage({
     super.key,
   });
 
   static final route = GoRoute(
-    path: AppRoute.home,
+    path: AppRoute.post,
     builder: (context, state) {
+      final postId = state.pathParameters['id']!;
+
       return MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => PostsBloc(context.read())..add(PostsGetDataEvent()),
+            create: (_) => PostBloc(
+              repository: context.read(),
+              postId: postId,
+            )..add(PostGetDataEvent()),
           ),
           BlocProvider(
-            create: (_) => StoriesBloc(context.read()),
+            create: (_) => CommentsBloc(
+              repository: context.read(),
+              postId: postId,
+            ),
           ),
         ],
-        child: HomePage(
+        child: PostPage(
           key: state.pageKey,
         ),
       );
@@ -41,37 +48,24 @@ class HomePage extends StatelessWidget {
         title: Assets.svg.logo.svg(
           height: 24,
         ),
-        leading: IconButton(
-          onPressed: () {},
-          splashRadius: 24,
-          icon: Assets.svg.bell.svg(),
-        ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: BlocBuilder<PostsBloc, PostsState>(
+      body: BlocBuilder<PostBloc, PostState>(
         bloc: context.read(),
         builder: (context, state) {
-          if (state is PostsSuccessState) {
-            return HomePageContent(
-              posts: state.data,
+          if (state is PostSuccessState) {
+            return PostPageContent(
+              post: state.data,
             );
           }
 
-          if (state is PostsErrorState) {
+          if (state is PostErrorState) {
             return Text(state.error.message ?? state.error.toString());
           }
 
           return Center(child: CircularProgressIndicator());
-        },
-      ),
-      bottomNavigationBar: HomeBottomNavigation(
-        currentIndex: 0,
-        onTap: (value) {
-          // setState(() {
-          //   bottomNavigationIndex = value;
-          // });
         },
       ),
     );

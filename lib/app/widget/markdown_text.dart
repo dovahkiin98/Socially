@@ -32,6 +32,7 @@ class MarkdownText extends StatelessWidget {
         child: MarkdownBody(
           data: text,
           shrinkWrap: true,
+          fitContent: false,
           styleSheet: MarkdownStyleSheet(
             p: style,
             strong: boldStyle,

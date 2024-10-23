@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:socially/app/router/routes.dart';
 import 'package:socially/domain/model/post.dart';
+import 'package:socially/feature/home/bloc/posts/posts_bloc.dart';
 
 import '../widget/post_item.dart';
 import '../widget/stories_bar.dart';
@@ -24,7 +28,10 @@ class _HomePageContentState extends State<HomePageContent> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await Future.delayed(Duration(seconds: 2));
+        final bloc = context.read<PostsBloc>();
+
+        bloc.add(PostsGetDataEvent());
+        await bloc.stream.first;
       },
       child: ListView.separated(
         itemCount: posts.length + 1,
@@ -42,9 +49,14 @@ class _HomePageContentState extends State<HomePageContent> {
           } else {
             final post = posts[i - 1];
 
-            return PostItem(
-              key: ValueKey(post.id),
-              post: post,
+            return GestureDetector(
+              onTap: () {
+                context.push(AppRoute.postId(post.id));
+              },
+              child: PostItem(
+                key: ValueKey(post.id),
+                post: post,
+              ),
             );
           }
         },

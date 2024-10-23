@@ -8,15 +8,27 @@ import 'package:socially/feature/home/bloc/stories/stories_bloc.dart';
 import 'story_item.dart';
 
 /// A Horizontal [ListView] that contains avatars of viewable stories
-class StoriesBar extends StatelessWidget {
+class StoriesBar extends StatefulWidget {
   const StoriesBar({
     super.key,
   });
 
   @override
+  State<StoriesBar> createState() => _StoriesBarState();
+}
+
+class _StoriesBarState extends State<StoriesBar> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<StoriesBloc>().add(StoriesGetDataEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<StoriesBloc, StoriesState>(
-      bloc: context.read<StoriesBloc>()..add(StoriesGetDataEvent()),
+      bloc: context.read<StoriesBloc>(),
       builder: (context, state) {
         if (state is StoriesSuccessState) {
           final stories = state.data;

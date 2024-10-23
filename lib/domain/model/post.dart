@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'comment.dart';
 import 'user.dart';
 
 class Post {
@@ -7,6 +8,8 @@ class Post {
     required this.id,
     this.text = '',
     required this.user,
+    required this.likes,
+    required this.comments,
     required this.createdAt,
     this.images = const [],
     this.tags = const [],
@@ -17,6 +20,8 @@ class Post {
   final List<String> images;
   final List<String> tags;
   final DocumentReference<User> user;
+  final CollectionReference likes;
+  final CollectionReference<Comment> comments;
   final Timestamp createdAt;
 
   static Post fromFirebase(
@@ -31,6 +36,11 @@ class Post {
       user: (data['user'] as DocumentReference).withConverter(
         fromFirestore: User.fromFirebase,
         toFirestore: User.toFirebase,
+      ),
+      likes: snapshot.reference.collection('likes'),
+      comments: snapshot.reference.collection('comments').withConverter(
+        fromFirestore: Comment.fromFirebase,
+        toFirestore: Comment.toFirebase,
       ),
       images: List<String>.from(data['images'] ?? []),
       text: data['text'] ?? '',
