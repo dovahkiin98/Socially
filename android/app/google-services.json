@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "665751051618",
+    "project_id": "socially-63f17",
+    "storage_bucket": "socially-63f17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665751051618:android:202191b056d757d2dba03b",
+        "android_client_info": {
+          "package_name": "net.inferno.socially"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBo-VeZ54R8NxYzO5ZkxUA3MDps0VTva_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
